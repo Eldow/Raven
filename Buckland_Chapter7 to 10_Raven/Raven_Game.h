@@ -44,6 +44,9 @@ private:
   //a list of all the bots that are inhabiting the map
   std::list<Raven_Bot*>            m_Bots;
 
+  //the number of teams
+  int							   m_Teams;
+
   //the user may select a bot to control manually. This is a pointer to that
   //bot
   Raven_Bot*                       m_pSelectedBot;
@@ -99,9 +102,15 @@ public:
   void AddShotGunPellet(Raven_Bot* shooter, Vector2D target);
   void AddBolt(Raven_Bot* shooter, Vector2D target);
 
+  //sets the number of teams
+  void DisableTeams();
+  void SetTwoTeams();
+  void SetThreeTeams();
+  void SetBotsTeam();
+
   //removes the last bot to be added
   void RemoveBot();
-
+  
   //returns true if a bot of size BoundingRadius cannot move from A to B
   //without bumping into world geometry
   bool isPathObstructed(Vector2D A, Vector2D B, double BoundingRadius = 0)const;
@@ -157,6 +166,7 @@ public:
   const Raven_Map* const                   GetMap()const{return m_pMap;}
   Raven_Map* const                         GetMap(){return m_pMap;}
   const std::list<Raven_Bot*>&             GetAllBots()const{return m_Bots;}
+  int									   GetNumTeams()const {return m_Teams;}
   PathManager<Raven_PathPlanner>* const    GetPathManager(){return m_pPathManager;}
   int                                      GetNumBots()const{return m_Bots.size();}
 

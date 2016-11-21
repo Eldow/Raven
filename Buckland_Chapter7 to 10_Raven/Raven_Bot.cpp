@@ -53,6 +53,16 @@ Raven_Bot::Raven_Bot(Raven_Game* world,Vector2D pos):
 
   SetUpVertexBuffer();
   
+  //sets bot team
+  int teamNumber = world->GetNumTeams();
+  if (teamNumber != 0) {
+	  /* initialize random seed: */
+	  SetTeam((world->GetNumBots() % teamNumber) + 1);
+  }
+  else {
+	  SetTeam(0);
+  }
+
   //a bot starts off facing in the direction it is heading
   m_vFacing = m_vHeading;
 
@@ -408,6 +418,20 @@ bool Raven_Bot::isAtPosition(Vector2D pos)const
   return Vec2DDistanceSq(Pos(), pos) < tolerance * tolerance;
 }
 
+//------------------------ isNearOpponent ---------------------------------------
+//
+//  returns true if the bot is close to the given position
+//-----------------------------------------------------------------------------
+bool Raven_Bot::isNearOpponent()const
+{
+	if (GetSensoryMem()->GetListOfRecentlySensedOpponents().size() > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 //------------------------- hasLOSt0 ------------------------------------------
 //
 //  returns true if the bot has line of sight to the given position.
@@ -483,10 +507,20 @@ void Raven_Bot::Render()
   //as long as this value is positive. (see Render)
   m_iNumUpdatesHitPersistant--;
 
-
   if (isDead() || isSpawning()) return;
-  
-  gdi->BluePen();
+  if (GetTeam() == 1) {
+	  gdi->BluePen();
+  }
+  if (GetTeam() == 2) {
+	  gdi->RedPen();
+  }
+  if (GetTeam() == 3) {
+	  gdi->GreenPen();
+  }
+  if (GetTeam() == 0) {
+	  gdi->BlackPen();
+  }
+
   
   m_vecBotVBTrans = WorldTransform(m_vecBotVB,
                                    Pos(),

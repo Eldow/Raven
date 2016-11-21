@@ -59,6 +59,12 @@ BEGIN
         MENUITEM "Show Goal Queue",             IDM_BOTS_SHOW_GOAL_Q
         MENUITEM "Show Path",                   IDM_NAVIGATION_SHOW_PATH
     END
+	POPUP "Select Team"
+	BEGIN
+		MENUITEM "Disable Teams", IDM_TEAMS_DISABLE
+		MENUITEM "Two Teams", IDM_TEAMS_TWO
+		MENUITEM "Three Teams", IDM_TEAMS_THREE
+	END
 END
 
 

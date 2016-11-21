@@ -43,6 +43,7 @@ Raven_Game::Raven_Game():m_pSelectedBot(NULL),
 {
   //load in the default map
   LoadMap(script->GetString("StartMap"));
+  DisableTeams();
 }
 
 
@@ -533,6 +534,7 @@ void Raven_Game::ChangeWeaponOfPossessedBot(unsigned int weapon)const
 //------------------------------------------------------------------------------
 bool Raven_Game::isLOSOkay(Vector2D A, Vector2D B)const
 {
+	// TODO : Check if a bot obstruct the line segment too and return false 
   return !doWallsObstructLineSegment(A, B, m_pMap->GetWalls());
 }
 
@@ -678,10 +680,34 @@ Raven_Game::GetPosOfClosestSwitch(Vector2D botPos, unsigned int doorID)const
   return closest;
 }
 
+//--------------------------- Teams ------------------------------------------
+//-----------------------------------------------------------------------------
+void Raven_Game::DisableTeams() {
+	m_Teams = 0;
+	SetBotsTeam();
+}
+void Raven_Game::SetTwoTeams() {
+	m_Teams = 2;
+	SetBotsTeam();
+}
+void Raven_Game::SetThreeTeams() {
+	m_Teams = 3;
+	SetBotsTeam();
+}
 
+void Raven_Game::SetBotsTeam() {
+	std::list<Raven_Bot*>::iterator curBot = m_Bots.begin();
+	for (curBot; curBot != m_Bots.end(); ++curBot)
+	{
+		if (m_Teams != 0) {
+			(*curBot)->SetTeam((std::distance(m_Bots.begin(), curBot)%m_Teams) + 1);
+		}
+		else {
+			(*curBot)->SetTeam(0);
+		}
+	}
+}
 
-
-    
 //--------------------------- Render ------------------------------------------
 //-----------------------------------------------------------------------------
 void Raven_Game::Render()

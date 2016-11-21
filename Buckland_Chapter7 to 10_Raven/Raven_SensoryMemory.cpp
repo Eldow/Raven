@@ -99,30 +99,33 @@ void Raven_SensoryMemory::UpdateVision()
       //test if there is LOS between bots 
       if (m_pOwner->GetWorld()->isLOSOkay(m_pOwner->Pos(), (*curBot)->Pos()))
       {
-        info.bShootable = true;
+		  if (m_pOwner->GetTeam() == 0 || ((*curBot)->GetTeam() != m_pOwner->GetTeam())) {
+			  info.bShootable = true;
 
-              //test if the bot is within FOV
-        if (isSecondInFOVOfFirst(m_pOwner->Pos(),
-                                 m_pOwner->Facing(),
-                                 (*curBot)->Pos(),
-                                  m_pOwner->FieldOfView()))
-        {
-          info.fTimeLastSensed     = Clock->GetCurrentTime();
-          info.vLastSensedPosition = (*curBot)->Pos();
-          info.fTimeLastVisible    = Clock->GetCurrentTime();
+			  //test if the bot is within FOV
+			  if (isSecondInFOVOfFirst(m_pOwner->Pos(),
+				  m_pOwner->Facing(),
+				  (*curBot)->Pos(),
+				  m_pOwner->FieldOfView()))
+			  {
+				  info.fTimeLastSensed = Clock->GetCurrentTime();
+				  info.vLastSensedPosition = (*curBot)->Pos();
+				  info.fTimeLastVisible = Clock->GetCurrentTime();
 
-          if (info.bWithinFOV == false)
-          {
-            info.bWithinFOV           = true;
-            info.fTimeBecameVisible    = info.fTimeLastSensed;
-          
-          }
-        }
+				  if (info.bWithinFOV == false)
+				  {
+					  info.bWithinFOV = true;
+					  info.fTimeBecameVisible = info.fTimeLastSensed;
 
-        else
-        {
-          info.bWithinFOV = false;         
-        }
+				  }
+			  }
+
+			  else
+			  {
+				  info.bWithinFOV = false;
+			  }
+		  }
+
       }
 
       else

@@ -23,6 +23,9 @@
 #define IDM_NAVIGATION_SMOOTH_PATHS_PRECISE 40015
 #define IDM_BOTS_SHOW_SENSED            40016
 #define IDM_GAME_PAUSE                  40017
+#define IDM_TEAMS_DISABLE				40019
+#define IDM_TEAMS_TWO					40020
+#define IDM_TEAMS_THREE					40021
 
 // Next default values for new objects
 // 

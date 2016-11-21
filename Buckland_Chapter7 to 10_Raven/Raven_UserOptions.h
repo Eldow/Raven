@@ -53,6 +53,10 @@ public:
   bool m_bShowBotHealth;
 
   bool m_bShowScore;
+
+  bool m_bDisableTeams;
+  bool m_bSetTwoTeams;
+  bool m_bSetThreeTeams;
 };
 
 

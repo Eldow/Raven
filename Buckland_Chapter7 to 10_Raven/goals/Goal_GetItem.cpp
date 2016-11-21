@@ -8,6 +8,7 @@
 
 #include "Goal_Wander.h"
 #include "Goal_FollowPath.h"
+#include "Goal_DodgeGetItem.h"
 
 
 int ItemTypeToGoalType(int gt)
@@ -77,7 +78,7 @@ bool Goal_GetItem::HandleMessage(const Telegram& msg)
 {
   //first, pass the message down the goal hierarchy
   bool bHandled = ForwardMessageToFrontMostSubgoal(msg);
-
+  Vector2D dummy;
   //if the msg was not handled, test to see if this goal can handle it
   if (bHandled == false)
   {
@@ -87,10 +88,14 @@ bool Goal_GetItem::HandleMessage(const Telegram& msg)
 
       //clear any existing goals
       RemoveAllSubgoals();
-
-      AddSubgoal(new Goal_FollowPath(m_pOwner,
-                                     m_pOwner->GetPathPlanner()->GetPath()));
-
+	  if ((m_pOwner->canStepLeft(dummy) || m_pOwner->canStepRight(dummy)) && m_pOwner->isNearOpponent())
+	  {
+		  AddSubgoal(new Goal_DodgeGetItem(m_pOwner));
+	  }
+	  else {
+		  AddSubgoal(new Goal_FollowPath(m_pOwner,
+			  m_pOwner->GetPathPlanner()->GetPath()));
+	  }
       //get the pointer to the item
       m_pGiverTrigger = static_cast<Raven_Map::TriggerType*>(msg.ExtraInfo);
 

@@ -74,6 +74,8 @@ private:
   Regulator*                         m_pTriggerTestRegulator;
   Regulator*                         m_pVisionUpdateRegulator;
 
+  //the bot's team
+  int								 m_iTeam;
   //the bot's health. Every time the bot is shot this value is decreased. If
   //it reaches zero then the bot dies (and respawns)
   int                                m_iHealth;
@@ -140,6 +142,8 @@ public:
   bool          RotateFacingTowardPosition(Vector2D target);
  
   //methods for accessing attribute data
+  int			GetTeam()const {return m_iTeam;}
+  void			SetTeam(int team) {m_iTeam = team;}
   int           Health()const{return m_iHealth;}
   int           MaxHealth()const{return m_iMaxHealth;}
   void          ReduceHealth(unsigned int val);
@@ -168,6 +172,8 @@ public:
   //returns true if the bot is close to the given position
   bool          isAtPosition(Vector2D pos)const;
 
+  //returns true if the bot is near an opponent
+  bool          isNearOpponent()const;
 
   //interface for human player
   void          FireWeapon(Vector2D pos);

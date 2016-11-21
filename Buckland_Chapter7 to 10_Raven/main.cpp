@@ -110,6 +110,9 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_GOAL_Q, UserOptions->m_bShowGoalsOfSelectedBot);
         CheckMenuItemAppropriately(hwnd, IDM_NAVIGATION_SHOW_INDICES, UserOptions->m_bShowNodeIndices);
         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_SENSED, UserOptions->m_bShowOpponentsSensedBySelectedBot);
+		CheckMenuItemAppropriately(hwnd, IDM_TEAMS_DISABLE, UserOptions->m_bDisableTeams);
+		CheckMenuItemAppropriately(hwnd, IDM_TEAMS_TWO, UserOptions->m_bSetTwoTeams);
+		CheckMenuItemAppropriately(hwnd, IDM_TEAMS_THREE, UserOptions->m_bSetThreeTeams);
 
       }
 
@@ -330,6 +333,48 @@ LRESULT CALLBACK WindowProc (HWND   hwnd,
         CheckMenuItemAppropriately(hwnd, IDM_BOTS_SHOW_GOAL_Q, UserOptions->m_bShowGoalsOfSelectedBot);
 
         break;
+
+	  case IDM_TEAMS_DISABLE:
+
+		  UserOptions->m_bDisableTeams = true;
+		  UserOptions->m_bSetTwoTeams = false;
+		  UserOptions->m_bSetThreeTeams = false;
+
+		  CheckMenuItemAppropriately(hwnd, IDM_TEAMS_DISABLE, UserOptions->m_bDisableTeams);
+		  CheckMenuItemAppropriately(hwnd, IDM_TEAMS_TWO, UserOptions->m_bSetTwoTeams);
+		  CheckMenuItemAppropriately(hwnd, IDM_TEAMS_THREE, UserOptions->m_bSetThreeTeams);
+
+		  g_pRaven->DisableTeams();
+
+		  break;
+
+	  case IDM_TEAMS_TWO:
+
+		  UserOptions->m_bDisableTeams = false;
+		  UserOptions->m_bSetTwoTeams = true;
+		  UserOptions->m_bSetThreeTeams = false;
+
+		  CheckMenuItemAppropriately(hwnd, IDM_TEAMS_DISABLE, UserOptions->m_bDisableTeams);
+		  CheckMenuItemAppropriately(hwnd, IDM_TEAMS_TWO, UserOptions->m_bSetTwoTeams);
+		  CheckMenuItemAppropriately(hwnd, IDM_TEAMS_THREE, UserOptions->m_bSetThreeTeams);
+
+		  g_pRaven->SetTwoTeams();
+
+		  break;
+
+	  case IDM_TEAMS_THREE:
+
+		  UserOptions->m_bDisableTeams = false;
+		  UserOptions->m_bSetTwoTeams = false;
+		  UserOptions->m_bSetThreeTeams = true;
+
+		  CheckMenuItemAppropriately(hwnd, IDM_TEAMS_DISABLE, UserOptions->m_bDisableTeams);
+		  CheckMenuItemAppropriately(hwnd, IDM_TEAMS_TWO, UserOptions->m_bSetTwoTeams);
+		  CheckMenuItemAppropriately(hwnd, IDM_TEAMS_THREE, UserOptions->m_bSetThreeTeams);
+
+		  g_pRaven->SetThreeTeams();
+
+		  break;
 
       }//end switch
     }
