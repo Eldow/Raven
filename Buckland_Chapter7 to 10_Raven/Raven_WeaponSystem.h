@@ -13,7 +13,9 @@
 //-----------------------------------------------------------------------------
 #include <map>
 #include "2d/vector2d.h"
+#include "Fuzzy/FuzzyModule.h"
 
+class FuzzyModule;
 class Raven_Bot;
 class Raven_Weapon;
 
@@ -22,6 +24,11 @@ class Raven_Weapon;
 class Raven_WeaponSystem
 {
 private:
+	//fuzzy logic is used to determine the desirability of a weapon. Each weapon
+	//owns its own instance of a fuzzy module because each has a different rule 
+	//set for inferring desirability.
+	FuzzyModule   m_FuzzyModule;
+	double GetShootDeviation();
   
   //a map of weapon instances indexed into by type
   typedef std::map<int, Raven_Weapon*>  WeaponMap;
@@ -76,7 +83,7 @@ public:
   //this method aims the bot's current weapon at the target (if there is a
   //target) and, if aimed correctly, fires a round. (Called each update-step
   //from Raven_Bot::Update)
-  void          TakeAimAndShoot()const;
+  void          TakeAimAndShoot();
 
   //this method determines the most appropriate weapon to use given the current
   //game state. (Called every n update-steps from Raven_Bot::Update)
@@ -108,6 +115,7 @@ public:
 
   void          RenderCurrentWeapon()const;
   void          RenderDesirabilities()const;
+  void          InitializeFuzzyModule();
 };
 
 #endif

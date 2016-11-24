@@ -57,6 +57,8 @@ void Raven_WeaponSystem::Initialize()
   m_WeaponMap[type_shotgun]         = 0;
   m_WeaponMap[type_rail_gun]        = 0;
   m_WeaponMap[type_rocket_launcher] = 0;
+
+  this->InitializeFuzzyModule();
 }
 
 //-------------------------------- SelectWeapon -------------------------------
@@ -173,7 +175,7 @@ void Raven_WeaponSystem::ChangeWeapon(unsigned int type)
 //  this method aims the bots current weapon at the target (if there is a
 //  target) and, if aimed correctly, fires a round
 //-----------------------------------------------------------------------------
-void Raven_WeaponSystem::TakeAimAndShoot()const
+void Raven_WeaponSystem::TakeAimAndShoot()
 {
   //aim the weapon only if the current target is shootable or if it has only
   //very recently gone out of view (this latter condition is to ensure the 
@@ -217,6 +219,7 @@ void Raven_WeaponSystem::TakeAimAndShoot()const
            (m_pOwner->GetTargetSys()->GetTimeTargetHasBeenVisible() >
             m_dReactionTime) )
       {
+		  this->GetShootDeviation();
         AddNoiseToAim(AimingPos);
         
         GetCurrentWeapon()->ShootAt(AimingPos);
@@ -329,4 +332,77 @@ void Raven_WeaponSystem::RenderDesirabilities()const
         offset+=15;
       }
     }
+}
+
+//-------------------------  InitializeFuzzyModule ----------------------------
+//
+//  set up some fuzzy variables and rules
+//-----------------------------------------------------------------------------
+void Raven_WeaponSystem::InitializeFuzzyModule()
+{
+	FuzzyVariable& DistToTarget = m_FuzzyModule.CreateFLV("DistToTarget");
+	FzSet& Target_Close = DistToTarget.AddLeftShoulderSet("Target_Close", 0, 50, 150);
+	FzSet& Target_Medium = DistToTarget.AddTriangularSet("Target_Medium", 50, 150, 300);
+	FzSet& Target_Far = DistToTarget.AddRightShoulderSet("Target_Far", 150, 300, 1000);
+
+	FuzzyVariable& Velocity = m_FuzzyModule.CreateFLV("Velocity");
+	FzSet& Low_Velocity = Velocity.AddLeftShoulderSet("Low_Velocity", 0, .2, .5);
+	FzSet& Medium_Velocity = Velocity.AddTriangularSet("Medium_Velocity", .2, .5, .7);
+	FzSet& High_Velocity = Velocity.AddRightShoulderSet("High_Velocity", .5, .7, 1);
+
+	FuzzyVariable& Visibility = m_FuzzyModule.CreateFLV("Visibility");
+	FzSet& Short_Visibilty_Time = Visibility.AddLeftShoulderSet("Short_Visibilty_Time", 0, .5, 1);
+	FzSet& Medium_Visibilty_Time = Visibility.AddTriangularSet("Medium_Visibilty_Time", .5, 10, 15);
+	FzSet& Long_Visibilty_Time = Visibility.AddRightShoulderSet("Long_Visibilty_Time", 10, 15, 1000);
+
+	FuzzyVariable& ShootDeviation = m_FuzzyModule.CreateFLV("ShootDeviation");
+	FzSet& High_Shoot_Deviation = ShootDeviation.AddRightShoulderSet("High_Shoot_Deviation", .1, .2, .3);
+	FzSet& Medium_Shoot_Deviation = ShootDeviation.AddTriangularSet("Medium_Shoot_Deviation", .05, .1, .2);
+	FzSet& Low_Shoot_Deviation = ShootDeviation.AddTriangularSet("No_Shoot_Deviation", 0, .05, .1);
+	FzSet& No_Shoot_Deviation = ShootDeviation.AddLeftShoulderSet("No_Shoot_Deviation", 0, 0, .05);
+
+
+	m_FuzzyModule.AddRule(FzAND(Target_Close, Low_Velocity, Short_Visibilty_Time), No_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Close, Low_Velocity, Medium_Visibilty_Time), No_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Close, Low_Velocity, Long_Visibilty_Time), No_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Close, Medium_Velocity, Short_Visibilty_Time), Low_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Close, Medium_Velocity, Medium_Visibilty_Time), Low_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Close, Medium_Velocity, Long_Visibilty_Time), Low_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Close, High_Velocity, Short_Visibilty_Time), Medium_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Close, High_Velocity, Medium_Visibilty_Time), Medium_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Close, High_Velocity, Long_Visibilty_Time), Medium_Shoot_Deviation);
+
+	m_FuzzyModule.AddRule(FzAND(Target_Medium, Low_Velocity, Short_Visibilty_Time), Medium_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Medium, Low_Velocity, Medium_Visibilty_Time), Low_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Medium, Low_Velocity, Long_Visibilty_Time), No_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Medium, Medium_Velocity, Short_Visibilty_Time), Medium_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Medium, Medium_Velocity, Medium_Visibilty_Time), Low_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Medium, Medium_Velocity, Long_Visibilty_Time), Low_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Medium, High_Velocity, Short_Visibilty_Time), High_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Medium, High_Velocity, Medium_Visibilty_Time), Medium_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Medium, High_Velocity, Long_Visibilty_Time), Low_Shoot_Deviation);
+
+	m_FuzzyModule.AddRule(FzAND(Target_Far, Low_Velocity, Short_Visibilty_Time), High_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Far, Low_Velocity, Medium_Visibilty_Time), Medium_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Far, Low_Velocity, Long_Visibilty_Time), No_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Far, Medium_Velocity, Short_Visibilty_Time), High_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Far, Medium_Velocity, Medium_Visibilty_Time), Medium_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Far, Medium_Velocity, Long_Visibilty_Time), Low_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Far, High_Velocity, Short_Visibilty_Time), High_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Far, High_Velocity, Medium_Visibilty_Time), Medium_Shoot_Deviation);
+	m_FuzzyModule.AddRule(FzAND(Target_Far, High_Velocity, Long_Visibilty_Time), Low_Shoot_Deviation);
+}
+
+//---------------------------- Desirability -----------------------------------
+//
+//-----------------------------------------------------------------------------
+double Raven_WeaponSystem::GetShootDeviation()
+{
+	m_FuzzyModule.Fuzzify("DistToTarget", m_pOwner->GetTargetBot()->GetTargetBot()->Pos().Distance(m_pOwner->Pos()));
+	m_FuzzyModule.Fuzzify("Velocity", (double)m_pOwner->GetTargetBot()->Velocity().Length());
+	m_FuzzyModule.Fuzzify("Visibility", (double)m_pOwner->GetTargetSys()->GetTimeTargetHasBeenVisible());
+
+	this->m_dAimAccuracy = m_FuzzyModule.DeFuzzify("ShootDeviation", FuzzyModule::max_av);
+
+	return this->m_dAimAccuracy;
 }
