@@ -41,6 +41,10 @@ Raven_Game::Raven_Game():m_pSelectedBot(NULL),
                          m_pPathManager(NULL),
                          m_pGraveMarkers(NULL)
 {
+  //Init leaders to null
+	m_BlueLeader = nullptr;
+	m_RedLeader = nullptr;
+	m_GreenLeader = nullptr;
   //load in the default map
   LoadMap(script->GetString("StartMap"));
   DisableTeams();
@@ -568,6 +572,24 @@ bool Raven_Game::isPathObstructed(Vector2D A,
   return false;
 }
 
+//----------------------------- GetLeaderOfTeam- ------------------------------
+//
+//  returns the leader of the team designed by int
+//-----------------------------------------------------------------------------
+Raven_Bot* Raven_Game::GetLeader(int team) {
+	if (team == 1) {
+		return m_BlueLeader;
+	}
+	else if (team == 2) {
+		return m_RedLeader;
+	}
+	else if (team == 3) {
+		return m_GreenLeader;
+	}
+	else {
+		return nullptr;
+	}
+}
 
 //----------------------------- GetAllBotsInFOV ------------------------------
 //
@@ -684,10 +706,14 @@ Raven_Game::GetPosOfClosestSwitch(Vector2D botPos, unsigned int doorID)const
 //-----------------------------------------------------------------------------
 void Raven_Game::DisableTeams() {
 	m_Teams = 0;
+	m_BlueLeader = nullptr;
+	m_RedLeader = nullptr;
+	m_GreenLeader = nullptr;
 	SetBotsTeam();
 }
 void Raven_Game::SetTwoTeams() {
 	m_Teams = 2;
+	m_GreenLeader = nullptr;
 	SetBotsTeam();
 }
 void Raven_Game::SetThreeTeams() {
@@ -701,10 +727,66 @@ void Raven_Game::SetBotsTeam() {
 	{
 		if (m_Teams != 0) {
 			(*curBot)->SetTeam((std::distance(m_Bots.begin(), curBot)%m_Teams) + 1);
+			if (m_BlueLeader == nullptr && (*curBot)->GetTeam() == 1) {
+				m_BlueLeader = (*curBot);
+				m_BlueLeader->SetLeader(true);
+			}
+			if (m_RedLeader == nullptr && (*curBot)->GetTeam() == 2) {
+				m_RedLeader = (*curBot);
+				m_RedLeader->SetLeader(true);
+			}
+			if (m_GreenLeader == nullptr && (*curBot)->GetTeam() == 3) {
+				m_GreenLeader = (*curBot);
+				m_GreenLeader->SetLeader(true);
+			}
 		}
 		else {
 			(*curBot)->SetTeam(0);
 		}
+	}
+}
+
+void Raven_Game::SetLeader(int team) {
+	std::list<Raven_Bot*>::iterator curBot = m_Bots.begin();
+	if (team == 0) {
+		return;
+	}
+	for (curBot; curBot != m_Bots.end(); ++curBot)
+	{
+		if ((*curBot)->GetTeam() == team) {
+			if (team == 1) {
+				(*curBot)->SetLeader(true);
+				m_BlueLeader = (*curBot);
+				return;
+			}
+			else if (team == 2) {
+				(*curBot)->SetLeader(true);
+				m_RedLeader = (*curBot);
+				return;
+			}
+			else if (team == 3) {
+				(*curBot)->SetLeader(true);
+				m_GreenLeader = (*curBot);
+				return;
+			}
+			else {
+				return;
+			}
+		}
+	}
+}
+
+//-----------------------Remove Leader ----------------------------------------
+//-----------------------------------------------------------------------------
+void Raven_Game::RemoveLeader(int team) {
+	if (team == 1) {
+		m_BlueLeader = nullptr;
+	}
+	else if (team == 2) {
+		m_RedLeader = nullptr;
+	}
+	else if (team == 3) {
+		m_GreenLeader = nullptr;
 	}
 }
 

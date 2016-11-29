@@ -76,6 +76,8 @@ private:
 
   //the bot's team
   int								 m_iTeam;
+  //is the bot leader
+  bool								 m_isLeader;
   //the bot's health. Every time the bot is shot this value is decreased. If
   //it reaches zero then the bot dies (and respawns)
   int                                m_iHealth;
@@ -144,6 +146,8 @@ public:
   //methods for accessing attribute data
   int			GetTeam()const {return m_iTeam;}
   void			SetTeam(int team) {m_iTeam = team;}
+  bool			IsLeader() { return m_isLeader; }
+  void			SetLeader(bool lead) { m_isLeader = lead; }
   int           Health()const{return m_iHealth;}
   int           MaxHealth()const{return m_iMaxHealth;}
   void          ReduceHealth(unsigned int val);
@@ -162,7 +166,7 @@ public:
   bool          isSpawning()const{return m_Status == spawning;}
   
   void          SetSpawning(){m_Status = spawning;}
-  void          SetDead(){m_Status = dead;}
+  void          SetDead();
   void          SetAlive(){m_Status = alive;}
 
   //returns a value indicating the time in seconds it will take the bot

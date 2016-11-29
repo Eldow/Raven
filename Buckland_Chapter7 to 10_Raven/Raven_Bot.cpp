@@ -56,13 +56,16 @@ Raven_Bot::Raven_Bot(Raven_Game* world,Vector2D pos):
   //sets bot team
   int teamNumber = world->GetNumTeams();
   if (teamNumber != 0) {
-	  /* initialize random seed: */
 	  SetTeam((world->GetNumBots() % teamNumber) + 1);
+	  //if there is no leader, set one
+	  if (!world->GetLeader(GetTeam())) {
+		  world->SetLeader(GetTeam());
+	  }
   }
   else {
 	  SetTeam(0);
   }
-
+  m_isLeader = false;
   //a bot starts off facing in the direction it is heading
   m_vFacing = m_vHeading;
 
@@ -353,6 +356,15 @@ void Raven_Bot::ReduceHealth(unsigned int val)
   m_iNumUpdatesHitPersistant = (int)(FrameRate * script->GetDouble("HitFlashTime"));
 }
 
+//-------------------------------------SetDead---------------------------------
+void Raven_Bot::SetDead() {
+	if (IsLeader()) {
+		m_pWorld->RemoveLeader(GetTeam());
+		m_pWorld->SetLeader(GetTeam());
+	}
+	m_Status = dead;
+}
+
 //--------------------------- Possess -----------------------------------------
 //
 //  this is called to allow a human player to control the bot
@@ -531,7 +543,19 @@ void Raven_Bot::Render()
   gdi->ClosedShape(m_vecBotVBTrans);
   
   //draw the head
-  gdi->BrownBrush();
+  if (GetTeam() == 1 && IsLeader()) {
+	  gdi->BlueBrush();
+  }
+  if (GetTeam() == 2 && IsLeader()) {
+	  gdi->RedBrush();
+  }
+  if (GetTeam() == 3 && IsLeader()) {
+	  gdi->GreenBrush();
+  }
+  if (GetTeam() == 0 || !IsLeader()) {
+	  gdi->BrownBrush();
+  }
+
   gdi->Circle(Pos(), 6.0 * Scale().x);
 
 

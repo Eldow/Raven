@@ -47,6 +47,11 @@ private:
   //the number of teams
   int							   m_Teams;
 
+  //the leader of each team
+  Raven_Bot*					   m_BlueLeader;
+  Raven_Bot*					   m_RedLeader;
+  Raven_Bot*					   m_GreenLeader;
+
   //the user may select a bot to control manually. This is a pointer to that
   //bot
   Raven_Bot*                       m_pSelectedBot;
@@ -107,7 +112,10 @@ public:
   void SetTwoTeams();
   void SetThreeTeams();
   void SetBotsTeam();
-
+  void SetLeader(int team);
+  //retrieves the team leader of the team designed by int
+  Raven_Bot*  GetLeader(int team);
+  void  RemoveLeader(int team);
   //removes the last bot to be added
   void RemoveBot();
   
@@ -155,7 +163,7 @@ public:
 
   //when called will release any possessed bot from user control
   void        ExorciseAnyPossessedBot();
- 
+
   //if a bot is possessed the keyboard is polled for user input and any 
   //relevant bot methods are called appropriately
   void        GetPlayerInput()const;

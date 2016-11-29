@@ -156,7 +156,8 @@ Raven_SensoryMemory::GetListOfRecentlySensedOpponents()const
     //if this bot has been updated in the memory recently, add to list
     if ( (CurrentTime - curRecord->second.fTimeLastSensed) <= m_dMemorySpan)
     {
-      opponents.push_back(curRecord->first);
+		if(curRecord->first->GetTeam() != m_pOwner->GetTeam() || m_pOwner->GetTeam() == 0)
+			opponents.push_back(curRecord->first);
     }
   }
 
