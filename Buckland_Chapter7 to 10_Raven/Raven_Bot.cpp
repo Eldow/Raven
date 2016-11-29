@@ -115,6 +115,9 @@ Raven_Bot::~Raven_Bot()
   delete m_pSensoryMem;
 }
 
+Raven_Bot* Raven_Bot::GetLeader() {
+	return m_pWorld->GetLeader(GetTeam());
+}
 //------------------------------- Spawn ---------------------------------------
 //
 //  spawns the bot at the given position

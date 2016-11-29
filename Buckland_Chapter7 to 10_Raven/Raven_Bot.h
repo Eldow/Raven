@@ -148,6 +148,7 @@ public:
   void			SetTeam(int team) {m_iTeam = team;}
   bool			IsLeader() { return m_isLeader; }
   void			SetLeader(bool lead) { m_isLeader = lead; }
+  Raven_Bot*	GetLeader();
   int           Health()const{return m_iHealth;}
   int           MaxHealth()const{return m_iMaxHealth;}
   void          ReduceHealth(unsigned int val);
