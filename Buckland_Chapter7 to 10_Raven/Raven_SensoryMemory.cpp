@@ -99,7 +99,6 @@ void Raven_SensoryMemory::UpdateVision()
       //test if there is LOS between bots 
       if (m_pOwner->GetWorld()->isLOSOkay(m_pOwner->Pos(), (*curBot)->Pos()))
       {
-		  if (m_pOwner->GetTeam() == 0 || ((*curBot)->GetTeam() != m_pOwner->GetTeam())) {
 			  info.bShootable = true;
 
 			  //test if the bot is within FOV
@@ -124,7 +123,7 @@ void Raven_SensoryMemory::UpdateVision()
 			  {
 				  info.bWithinFOV = false;
 			  }
-		  }
+		  
 
       }
 
@@ -164,6 +163,32 @@ Raven_SensoryMemory::GetListOfRecentlySensedOpponents()const
   return opponents;
 }
 
+//------------------------ GetListOfRecentlySensedAllies -------------------
+//
+//  returns a list of the bots that have been sensed recently
+//-----------------------------------------------------------------------------
+std::list<Raven_Bot*>
+Raven_SensoryMemory::GetListOfRecentlySensedAllies()const
+{
+	//this will store all the opponents the bot can remember
+	std::list<Raven_Bot*> allies;
+
+	double CurrentTime = Clock->GetCurrentTime();
+
+	MemoryMap::const_iterator curRecord = m_MemoryMap.begin();
+	for (curRecord; curRecord != m_MemoryMap.end(); ++curRecord)
+	{
+		//if this bot has been updated in the memory recently, add to list
+		if ((CurrentTime - curRecord->second.fTimeLastSensed) <= m_dMemorySpan)
+		{
+			if (curRecord->first->GetTeam() == m_pOwner->GetTeam() && m_pOwner->GetTeam() != 0)
+				allies.push_back(curRecord->first);
+		}
+	}
+
+	return allies;
+}
+
 //----------------------------- isOpponentShootable --------------------------------
 //
 //  returns true if the bot given as a parameter can be shot (ie. its not
@@ -172,9 +197,12 @@ Raven_SensoryMemory::GetListOfRecentlySensedOpponents()const
 bool Raven_SensoryMemory::isOpponentShootable(Raven_Bot* pOpponent)const
 {
   MemoryMap::const_iterator it = m_MemoryMap.find(pOpponent);
- 
+
   if (it != m_MemoryMap.end())
   {
+	if (m_pOwner->GetTeam() != 0 && (m_pOwner->GetTeam() == pOpponent->GetTeam())) {
+	  return false;
+	}
     return it->second.bShootable;
   }
 

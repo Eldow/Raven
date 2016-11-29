@@ -207,6 +207,8 @@ void Raven_WeaponSystem::TakeAimAndShoot()
         AddNoiseToAim(AimingPos);
 
         GetCurrentWeapon()->ShootAt(AimingPos);
+		//tell to allies to focus on the same opponent
+		m_pOwner->DispatchTargetToAllies();
       }
     }
 

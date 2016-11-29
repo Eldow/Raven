@@ -287,6 +287,11 @@ bool Raven_Bot::HandleMessage(const Telegram& msg)
 
       return true;
     }
+  case Msg_FocusMyTarget:
+  {
+	  //Shoot at the target's pos
+	  GetTargetSys()->SetTarget(m_pWorld->GetLeader(GetTeam())->GetTargetSys()->GetTarget());
+  }
 
 
   default: return false;
@@ -409,6 +414,25 @@ void Raven_Bot::FireWeapon(Vector2D pos)
   m_pWeaponSys->ShootAt(pos);
 }
 
+//---------------------------- DispatchTargetToAllies -------------------------
+//
+//  tells to nearby allies to focus on leader's target
+//-----------------------------------------------------------------------------
+void Raven_Bot::DispatchTargetToAllies() {
+	if (IsLeader()) {
+		std::list<Raven_Bot*> allies = GetSensoryMem()->GetListOfRecentlySensedAllies();
+		std::list<Raven_Bot*>::iterator curBot = allies.begin();
+		for (curBot; curBot != allies.end(); ++curBot)
+		{
+			Dispatcher->DispatchMsg(SEND_MSG_IMMEDIATELY,
+				ID(),
+				(*curBot)->ID(),
+				Msg_FocusMyTarget,
+				NO_ADDITIONAL_INFO
+				);
+		}
+	}
+}
 //----------------- CalculateExpectedTimeToReachPosition ----------------------
 //
 //  returns a value indicating the time in seconds it will take the bot

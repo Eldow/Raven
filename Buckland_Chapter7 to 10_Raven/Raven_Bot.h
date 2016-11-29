@@ -219,6 +219,7 @@ public:
   Raven_Bot* const                   GetTargetBot()const{return m_pTargSys->GetTarget();}
   Raven_WeaponSystem* const          GetWeaponSys()const{return m_pWeaponSys;}
   Raven_SensoryMemory* const         GetSensoryMem()const{return m_pSensoryMem;}
+  void								 DispatchTargetToAllies();
 
 
 };
