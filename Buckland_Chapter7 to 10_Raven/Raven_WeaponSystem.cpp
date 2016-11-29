@@ -399,8 +399,8 @@ void Raven_WeaponSystem::InitializeFuzzyModule()
 double Raven_WeaponSystem::GetShootDeviation()
 {
 	m_FuzzyModule.Fuzzify("DistToTarget", m_pOwner->GetTargetBot()->Pos().Distance(m_pOwner->Pos()));
-	m_FuzzyModule.Fuzzify("Velocity", (double)m_pOwner->GetTargetBot()->Velocity().Length());
-	m_FuzzyModule.Fuzzify("Visibility", (double)m_pOwner->GetTargetSys()->GetTimeTargetHasBeenVisible());
+	m_FuzzyModule.Fuzzify("Velocity", (float)m_pOwner->GetTargetBot()->Velocity().Length());
+	m_FuzzyModule.Fuzzify("Visibility", (float)m_pOwner->GetTargetSys()->GetTimeTargetHasBeenVisible());
 
 	this->m_dAimAccuracy = m_FuzzyModule.DeFuzzify("ShootDeviation", FuzzyModule::max_av);
 
