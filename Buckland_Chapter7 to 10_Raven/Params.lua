@@ -148,19 +148,19 @@ Rocket_Scale       = Bot_Scale
 Rocket_Damage      = 10
 Rocket_ExplosionDecayRate = 2.0   --how fast the explosion occurs (in secs)
 
-GrenadeLauncher_FiringFreq       = 2
+GrenadeLauncher_FiringFreq       = 1
 GrenadeLauncher_DefaultRounds      = 10
 GrenadeLauncher_MaxRoundsCarried = 30
 GrenadeLauncher_IdealRange  = 100
 GrenadeLauncher_SoundRange  = 300
 
-Grenade_BlastRadius = 30
+Grenade_BlastRadius = 40
 Grenade_MaxSpeed    = 2
 Grenade_Mass        = 1
 Grenade_MaxForce    = 10.0
 Grenade_Scale       = Bot_Scale
 Grenade_Damage      = 10
-Grenade_ExplosionDecayRate = 4.0   --how fast the explosion occurs (in secs)
+Grenade_ExplosionDecayRate = 2.0   --how fast the explosion occurs (in secs)
 
 
 RailGun_FiringFreq       = 1

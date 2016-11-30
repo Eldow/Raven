@@ -271,10 +271,10 @@
     <ClCompile Include="goals\Goal_DodgeGetItem.cpp">
       <Filter>AI\goals\atomic</Filter>
     </ClCompile>
-    <ClCompile Include="Projectile_Grenade.cpp">
+    <ClCompile Include="armory\Projectile_Grenade.cpp">
       <Filter>Game\weapons &amp; projectiles\projectiles</Filter>
     </ClCompile>
-    <ClCompile Include="Weapon_GrenadeLauncher.cpp">
+    <ClCompile Include="armory\Weapon_GrenadeLauncher.cpp">
       <Filter>Game\weapons &amp; projectiles\weapons</Filter>
     </ClCompile>
   </ItemGroup>
@@ -618,10 +618,10 @@
     <ClInclude Include="goals\Goal_DodgeGetItem.h">
       <Filter>AI\goals\atomic</Filter>
     </ClInclude>
-    <ClInclude Include="Projectile_Grenade.h">
+    <ClInclude Include="armory\Projectile_Grenade.h">
       <Filter>Game\weapons &amp; projectiles\projectiles</Filter>
     </ClInclude>
-    <ClInclude Include="Weapon_GrenadeLauncher.h">
+    <ClInclude Include="armory\Weapon_GrenadeLauncher.h">
       <Filter>Game\weapons &amp; projectiles\weapons</Filter>
     </ClInclude>
   </ItemGroup>
