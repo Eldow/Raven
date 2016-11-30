@@ -105,6 +105,7 @@ public:
   void AddRocket(Raven_Bot* shooter, Vector2D target);
   void AddRailGunSlug(Raven_Bot* shooter, Vector2D target);
   void AddShotGunPellet(Raven_Bot* shooter, Vector2D target);
+  void AddGrenade(Raven_Bot * shooter, Vector2D target);
   void AddBolt(Raven_Bot* shooter, Vector2D target);
 
   //sets the number of teams
