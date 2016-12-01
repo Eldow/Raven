@@ -129,7 +129,7 @@ public:
   void          DecrementNumRounds(){if (m_iNumRoundsLeft>0) --m_iNumRoundsLeft;}
   void          IncrementRounds(int num); 
   unsigned int  GetType()const{return m_iType;}
-  double         GetIdealRange()const{return m_dIdealRange;}
+  double        GetIdealRange()const{return m_dIdealRange;}
 };
 
 

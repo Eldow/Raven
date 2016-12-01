@@ -142,7 +142,7 @@ void  Raven_WeaponSystem::AddWeapon(unsigned int weapon_type)
   //if the bot already holds a weapon of this type, just add its ammo
   Raven_Weapon* present = GetWeaponFromInventory(weapon_type);
 
-  if (present)
+  if (present && w != NULL)
   {
     present->IncrementRounds(w->NumRoundsRemaining());
 
@@ -311,7 +311,8 @@ void Raven_WeaponSystem::ShootAt(Vector2D pos)const
 //-----------------------------------------------------------------------------
 void Raven_WeaponSystem::RenderCurrentWeapon()const
 {
-  GetCurrentWeapon()->Render();
+	if(GetCurrentWeapon() != NULL)
+		GetCurrentWeapon()->Render();
 }
 
 void Raven_WeaponSystem::RenderDesirabilities()const

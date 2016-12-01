@@ -377,6 +377,14 @@ void Raven_Bot::ReduceHealth(unsigned int val)
 
   if (m_iHealth <= 0)
   {
+	  /* Attempt to give a weappon to nearby allies on death
+	  if (GetTeam() != 0) {
+		  std::list<Raven_Bot*> allies = GetSensoryMem()->GetListOfRecentlySensedAllies();
+		  std::list<Raven_Bot*>::iterator curBot = allies.begin();
+		  if (curBot != allies.end() && allies.size() > 0) {
+			  (*curBot)->GetWeaponSys()->AddWeapon(GetWeaponSys()->GetCurrentWeapon()->GetType());
+		  }
+	  }*/
     SetDead();
   }
 

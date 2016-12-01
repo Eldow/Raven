@@ -14,11 +14,11 @@
 #include <map>
 #include "2d/vector2d.h"
 #include "Fuzzy/FuzzyModule.h"
+#include "armory/Raven_Weapon.h"
 
 class FuzzyModule;
 class Raven_Bot;
 class Raven_Weapon;
-
 
 
 class Raven_WeaponSystem
