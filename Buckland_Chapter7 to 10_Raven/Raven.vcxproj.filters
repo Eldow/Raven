@@ -271,6 +271,9 @@
     <ClCompile Include="goals\Goal_DodgeGetItem.cpp">
       <Filter>AI\goals\atomic</Filter>
     </ClCompile>
+    <ClCompile Include="goals\Goal_DropItem.cpp">
+      <Filter>AI\goals\composite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raven_Bot.h">
@@ -611,6 +614,9 @@
     </ClInclude>
     <ClInclude Include="goals\Goal_DodgeGetItem.h">
       <Filter>AI\goals\atomic</Filter>
+    </ClInclude>
+    <ClInclude Include="goals\Goal_DropItem.h">
+      <Filter>AI\goals\composite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

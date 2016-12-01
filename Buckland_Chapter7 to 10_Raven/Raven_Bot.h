@@ -81,7 +81,7 @@ private:
   //the bot's health. Every time the bot is shot this value is decreased. If
   //it reaches zero then the bot dies (and respawns)
   int                                m_iHealth;
-  
+  bool								 m_DropItem;
   //the bot's maximum health value. It starts its life with health at this value
   int                                m_iMaxHealth;
 
@@ -165,6 +165,7 @@ public:
   bool          isDead()const{return m_Status == dead;}
   bool          isAlive()const{return m_Status == alive;}
   bool          isSpawning()const{return m_Status == spawning;}
+  bool			isDroping()const { return m_DropItem; }
   
   void          SetSpawning(){m_Status = spawning;}
   void          SetDead();

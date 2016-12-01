@@ -709,16 +709,24 @@ void Raven_Game::DisableTeams() {
 	m_BlueLeader = nullptr;
 	m_RedLeader = nullptr;
 	m_GreenLeader = nullptr;
+	m_pMap->ResetTeamBase();
 	SetBotsTeam();
 }
 void Raven_Game::SetTwoTeams() {
 	m_Teams = 2;
 	m_GreenLeader = nullptr;
+	m_pMap->ResetTeamBase();
 	SetBotsTeam();
+	m_pMap->AddTeamBase(75, 75);
+	m_pMap->AddTeamBase(400, 75);
 }
 void Raven_Game::SetThreeTeams() {
 	m_Teams = 3;
+	m_pMap->ResetTeamBase();
 	SetBotsTeam();
+	m_pMap->AddTeamBase(75, 75);
+	m_pMap->AddTeamBase(400, 75);
+	m_pMap->AddTeamBase(200, 390);
 }
 
 void Raven_Game::SetBotsTeam() {

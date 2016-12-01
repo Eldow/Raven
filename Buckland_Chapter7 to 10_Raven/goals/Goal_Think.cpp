@@ -11,6 +11,7 @@
 #include "Goal_Wander.h"
 #include "Raven_Goal_Types.h"
 #include "Goal_AttackTarget.h"
+#include "Goal_DropItem.h"
 
 
 #include "GetWeaponGoal_Evaluator.h"
@@ -136,12 +137,13 @@ bool Goal_Think::notPresent(unsigned int GoalType)const
 
 void Goal_Think::AddGoal_MoveToPosition(Vector2D pos)
 {
-  AddSubgoal( new Goal_MoveToPosition(m_pOwner, pos));
+		AddSubgoal(new Goal_MoveToPosition(m_pOwner, pos));
+
 }
 
 void Goal_Think::AddGoal_Explore()
 {
-  if (notPresent(goal_explore))
+  if (notPresent(goal_explore) && !m_pOwner->isDroping())
   {
     RemoveAllSubgoals();
     AddSubgoal( new Goal_Explore(m_pOwner));
@@ -150,8 +152,7 @@ void Goal_Think::AddGoal_Explore()
 
 void Goal_Think::AddGoal_GetItem(unsigned int ItemType)
 {
-  if (notPresent(ItemTypeToGoalType(ItemType)))
-  {
+  if (notPresent(ItemTypeToGoalType(ItemType)) && !m_pOwner->isDroping()){
     RemoveAllSubgoals();
     AddSubgoal( new Goal_GetItem(m_pOwner, ItemType));
   }
@@ -159,13 +160,18 @@ void Goal_Think::AddGoal_GetItem(unsigned int ItemType)
 
 void Goal_Think::AddGoal_AttackTarget()
 {
-  if (notPresent(goal_attack_target))
+  if (notPresent(goal_attack_target) && !m_pOwner->isDroping())
   {
     RemoveAllSubgoals();
     AddSubgoal( new Goal_AttackTarget(m_pOwner));
   }
 }
-
+/*
+void Goal_Think::AddGoal_DropItem(Vector2D pos) {
+	RemoveAllSubgoals();
+	AddSubgoal(new Goal_DropItem(m_pOwner, pos));
+}
+*/
 //-------------------------- Queue Goals --------------------------------------
 //-----------------------------------------------------------------------------
 void Goal_Think::QueueGoal_MoveToPosition(Vector2D pos)

@@ -63,6 +63,7 @@ void Raven_Map::Clear()
 
   m_Walls.clear();
   m_SpawnPoints.clear();
+  m_TeamBases.clear();
   
   //delete the navgraph
   delete m_pNavGraph;   
@@ -123,6 +124,17 @@ void Raven_Map::AddSpawnPoint(std::ifstream& in)
   in >> dummy >> x >> y >> dummy >> dummy;                   //dummy values are artifacts from the map editor
 
   m_SpawnPoints.push_back(Vector2D(x,y));
+}
+
+//---------------------------- AddTeamBase  -----------------------------------
+//-----------------------------------------------------------------------------
+void Raven_Map::AddTeamBase(double x, double y)
+{
+	m_TeamBases.push_back(Vector2D(x, y));
+}
+
+void Raven_Map::ResetTeamBase() {
+	m_TeamBases.clear();
 }
 
 
@@ -409,5 +421,21 @@ void Raven_Map::Render()
     gdi->GreyBrush();
     gdi->GreyPen();
     gdi->Circle(*curSp, 7);
+  }
+
+  std::vector<Vector2D>::const_iterator curBase = m_TeamBases.begin();
+  for (curBase; curBase != m_TeamBases.end(); ++curBase)
+  {
+	  int pos = curBase - m_TeamBases.begin();
+	  if (pos == 0) {
+		  gdi->BluePen();
+	  }
+	  else if (pos == 1) {
+		  gdi->RedPen();
+	  }
+	  else if (pos == 2) {
+		  gdi->GreenPen();
+	  }
+	  gdi->Circle(*curBase, 10);
   }
 }

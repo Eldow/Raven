@@ -54,6 +54,9 @@ private:
   //it will appear at a randomly selected point chosen from this vector
   std::vector<Vector2D>              m_SpawnPoints;
 
+  //team bases
+  std::vector<Vector2D>				 m_TeamBases;
+
   //a map may contain a number of sliding doors.
   std::vector<Raven_Door*>           m_Doors;
  
@@ -96,6 +99,10 @@ public:
 
   //loads an environment from a file
   bool LoadMap(const std::string& FileName); 
+
+  //Add and reset team bases
+  void AddTeamBase(double x, double y);
+  void ResetTeamBase();
 
   //adds a wall and returns a pointer to that wall. (this method can be
   //used by objects such as doors to add walls to the environment)

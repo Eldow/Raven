@@ -66,6 +66,7 @@ Raven_Bot::Raven_Bot(Raven_Game* world,Vector2D pos):
 	  SetTeam(0);
   }
   m_isLeader = false;
+  m_DropItem = false;
   //a bot starts off facing in the direction it is heading
   m_vFacing = m_vHeading;
 
@@ -176,6 +177,26 @@ void Raven_Bot::Update()
     //this method aims the bot's current weapon at the current target
     //and takes a shot if a shot is possible
     m_pWeaponSys->TakeAimAndShoot();
+  }
+
+  //tells the bot to drop its item at his base
+  if (m_iHealth <= 15 && GetTeam() != 0 && !m_DropItem) {
+	  Vector2D destination;
+	  if (GetTeam() == 1) {
+		  destination = Vector2D(75, 75);
+	  }
+	  else if (GetTeam() == 2) {
+		  destination = Vector2D(400, 75);
+	  }
+	  else if (GetTeam() == 3) {
+		  destination = Vector2D(200, 390);
+	  }
+	  //m_pBrain->AddGoal_DropItem(destination);
+	  m_pBrain->AddGoal_MoveToPosition(destination);
+	  m_DropItem = true;
+  }
+  if (m_iHealth > 15) {
+	  m_DropItem = false;
   }
 }
 
@@ -362,6 +383,7 @@ void Raven_Bot::ReduceHealth(unsigned int val)
   m_bHit = true;
 
   m_iNumUpdatesHitPersistant = (int)(FrameRate * script->GetDouble("HitFlashTime"));
+
 }
 
 //-------------------------------------SetDead---------------------------------

@@ -33,7 +33,6 @@ Trigger_WeaponGiver::Trigger_WeaponGiver(std::ifstream& datafile):
   }
 }
 
-
 void Trigger_WeaponGiver::Try(Raven_Bot* pBot)
 {
   if (this->isActive() && this->isTouchingTrigger(pBot->Pos(), pBot->BRadius()))
